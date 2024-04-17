@@ -7,6 +7,7 @@ HH_API_URL = "https://api.hh.ru/vacancies"
 SJ_API_URL = "https://api.superjob.ru/2.0/vacancies/"
 SJ_CATALOGUES = {"Разработка, программирование": 48}
 HH_VACANCY = "Программист"
+MIN_HH_VACANCIES_NUMBER = 100
 CURRENCIES = {"hh": "RUR", "sj": "rub"}
 CITIES = {"hh": {"Москва": 1}, "sj": {"Москва": 4}}
 VACANCY_PERIOD = 30
@@ -80,7 +81,7 @@ def aggregate_hh_vacancies(languages):
             salary = predict_rub_salary_hh(vacancy)
             if salary:
                 valid_salaries.append(salary)
-        if vacancies_found > 100 and valid_salaries:
+        if vacancies_found > MIN_HH_VACANCIES_NUMBER and valid_salaries:
             vacancies_by_language[lang] = {}
             vacancies_by_language[lang]["vacancies_found"] = vacancies_found
             vacancies_by_language[lang]["vacancies_processed"] = len(valid_salaries)
