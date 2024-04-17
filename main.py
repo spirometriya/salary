@@ -82,10 +82,11 @@ def aggregate_hh_vacancies(languages):
             if salary:
                 valid_salaries.append(salary)
         if vacancies_found > MIN_HH_VACANCIES_NUMBER and valid_salaries:
-            vacancies_by_language[lang] = {}
-            vacancies_by_language[lang]["vacancies_found"] = vacancies_found
-            vacancies_by_language[lang]["vacancies_processed"] = len(valid_salaries)
-            vacancies_by_language[lang]["average_salary"] = int(sum(valid_salaries) / len(valid_salaries))
+            vacancies_by_language[lang] = {
+                "vacancies_found": vacancies_found,
+                "vacancies_processed": len(valid_salaries),
+                "average_salary": int(sum(valid_salaries) / len(valid_salaries))
+            }
     return vacancies_by_language
 
 
@@ -103,10 +104,11 @@ def aggregate_sj_vacancies(languages):
             if salary:
                 valid_salaries.append(salary)
         if vacancies_found:
-            vacancies_by_language[lang] = {}
-            vacancies_by_language[lang]["vacancies_found"] = vacancies_found
-            vacancies_by_language[lang]["vacancies_processed"] = len(valid_salaries)
-            vacancies_by_language[lang]["average_salary"] = int(sum(valid_salaries) / len(valid_salaries))
+            vacancies_by_language[lang] = {
+                "vacancies_found": vacancies_found,
+                "vacancies_processed": len(valid_salaries),
+                "average_salary": int(sum(valid_salaries) / len(valid_salaries))
+            }
     return vacancies_by_language
 
 
