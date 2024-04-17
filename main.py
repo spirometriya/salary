@@ -75,12 +75,16 @@ def aggregate_hh_vacancies(languages):
     vacancies_by_language = {}
     for lang in LANGUAGES:
         vacancies, vacancies_found = get_hh_vacancies(HH_VACANCY, lang, CITIES["hh"]["Москва"], VACANCY_PERIOD)
-        valid_salary = [predict_rub_salary_hh(v) for v in vacancies if predict_rub_salary_hh(v)]
-        if vacancies_found > 100:
+        valid_salaries = []
+        for vacancy in vacancies:
+            salary = predict_rub_salary_hh(vacancy)
+            if salary:
+                valid_salaries.append(salary)
+        if vacancies_found > 100 and valid_salaries:
             vacancies_by_language[lang] = {}
             vacancies_by_language[lang]["vacancies_found"] = vacancies_found
-            vacancies_by_language[lang]["vacancies_processed"] = len(valid_salary)
-            vacancies_by_language[lang]["average_salary"] = int(sum(valid_salary) / len(valid_salary))
+            vacancies_by_language[lang]["vacancies_processed"] = len(valid_salaries)
+            vacancies_by_language[lang]["average_salary"] = int(sum(valid_salaries) / len(valid_salaries))
     return vacancies_by_language
 
 
@@ -92,12 +96,16 @@ def aggregate_sj_vacancies(languages):
             lang, CITIES["sj"]["Москва"],
             VACANCY_PERIOD
         )
-        valid_salary = [predict_rub_salary_sj(v) for v in vacancies if predict_rub_salary_sj(v)]
+        valid_salaries = []
+        for vacancy in vacancies:
+            salary = predict_rub_salary_sj(vacancy)
+            if salary:
+                valid_salaries.append(salary)
         if vacancies_found:
             vacancies_by_language[lang] = {}
             vacancies_by_language[lang]["vacancies_found"] = vacancies_found
-            vacancies_by_language[lang]["vacancies_processed"] = len(valid_salary)
-            vacancies_by_language[lang]["average_salary"] = int(sum(valid_salary) / len(valid_salary))
+            vacancies_by_language[lang]["vacancies_processed"] = len(valid_salaries)
+            vacancies_by_language[lang]["average_salary"] = int(sum(valid_salaries) / len(valid_salaries))
     return vacancies_by_language
 
 
@@ -143,7 +151,7 @@ def create_vacancies_table(vacancies, title):
 
 def main():
     load_dotenv()
-    print(create_vacancies_table(aggregate_hh_vacancies(LANGUAGES), "HeadHunter Moscow"))
+    # print(create_vacancies_table(aggregate_hh_vacancies(LANGUAGES), "HeadHunter Moscow"))
     print(create_vacancies_table(aggregate_sj_vacancies(LANGUAGES), "SuperJob Moscow"))
 
 
