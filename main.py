@@ -103,7 +103,7 @@ def aggregate_sj_vacancies(languages):
             salary = predict_rub_salary_sj(vacancy)
             if salary:
                 valid_salaries.append(salary)
-        if vacancies_found:
+        if vacancies_found and valid_salaries:
             vacancies_by_language[lang] = {
                 "vacancies_found": vacancies_found,
                 "vacancies_processed": len(valid_salaries),
