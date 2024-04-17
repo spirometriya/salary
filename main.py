@@ -65,7 +65,7 @@ def get_sj_vacancies(catalogues, language, town, period):
     return vacancies
 
 
-def aagregate_hh_vacancies(languages):
+def aggregate_hh_vacancies(languages):
     vacancies_by_language = {}
     for lang in LANGUAGES:
         vacancies = get_hh_vacancies(HH_VACANCY, lang, CITIES["hh"]["Москва"], VACANCY_PERIOD)
@@ -79,7 +79,7 @@ def aagregate_hh_vacancies(languages):
     return vacancies_by_language
 
 
-def aagregate_sj_vacancies(languages):
+def aggregate_sj_vacancies(languages):
     vacancies_by_language = {}
     for lang in LANGUAGES:
         vacancies = get_sj_vacancies(SJ_CATALOGUES["Разработка, программирование"], lang, CITIES["sj"]["Москва"],
@@ -121,13 +121,13 @@ def predict_rub_salary_sj(vacancy):
 
 def parse_vacancies(vacancies):
     parsed_vacancies = []
-    for lang, vacancies_data in vacancies.items():
-        vacancy_values = []
-        vacancy_values.append(lang)
-        vacancy_values.append(vacancies_data.get("vacancies_found"))
-        vacancy_values.append(vacancies_data.get("vacancies_processed"))
-        vacancy_values.append(vacancies_data.get("average_salary"))
-        parsed_vacancies.append(vacancy_values)
+    for lang, agg_vacancies in vacancies.items():
+        parsed_vacancies_for_lang = []
+        parsed_vacancies_for_lang.append(lang)
+        parsed_vacancies_for_lang.append(agg_vacancies.get("vacancies_found"))
+        parsed_vacancies_for_lang.append(agg_vacancies.get("vacancies_processed"))
+        parsed_vacancies_for_lang.append(agg_vacancies.get("average_salary"))
+        parsed_vacancies.append(parsed_vacancies_for_lang)
     return parsed_vacancies
 
 
@@ -141,8 +141,8 @@ def create_vacancies_table(vacancies, title):
 
 def main():
     load_dotenv()
-    print(create_vacancies_table(aagregate_hh_vacancies(LANGUAGES), "HeadHunter Moscow"))
-    print(create_vacancies_table(aagregate_sj_vacancies(LANGUAGES), "SuperJob Moscow"))
+    print(create_vacancies_table(aggregate_hh_vacancies(LANGUAGES), "HeadHunter Moscow"))
+    print(create_vacancies_table(aggregate_sj_vacancies(LANGUAGES), "SuperJob Moscow"))
 
 
 if __name__ == "__main__":
