@@ -38,8 +38,9 @@ def get_hh_vacancies(vacancy, language, area, period):
     while payload["page"] < pages_number:
         response = requests.get(HH_API_URL, params=payload)
         response.raise_for_status()
-        vacancies += response.json().get("items", [])
-        pages_number = response.json()["pages"]
+        response = response.json()
+        vacancies += response.get("items", [])
+        pages_number = response.get("pages")
         payload["page"] += 1
     return vacancies
 
@@ -59,8 +60,9 @@ def get_sj_vacancies(catalogues, language, town, period):
     while more:
         response = requests.get(SJ_API_URL, headers=headers, params=payload)
         response.raise_for_status()
-        vacancies += response.json().get("objects", [])
-        more = response.json()["more"]
+        response = response.json()
+        vacancies += response.get("objects", [])
+        more = response.get("more")
         payload["page"] += 1
     return vacancies
 
@@ -119,19 +121,7 @@ def predict_rub_salary_sj(vacancy):
         return predict_salary(salary["payment_from"], salary["payment_to"])
 
 
-def parse_vacancies(vacancies):
-    parsed_vacancies = []
-    for lang, agg_vacancies in vacancies.items():
-        parsed_vacancies_for_lang = []
-        parsed_vacancies_for_lang.append(lang)
-        parsed_vacancies_for_lang.append(agg_vacancies.get("vacancies_found"))
-        parsed_vacancies_for_lang.append(agg_vacancies.get("vacancies_processed"))
-        parsed_vacancies_for_lang.append(agg_vacancies.get("average_salary"))
-        parsed_vacancies.append(parsed_vacancies_for_lang)
-    return parsed_vacancies
-
-
-def create_vacancies_table(title, vacancies):
+def create_vacancies_table(vacancies, title):
     title = title
     columns = [["Язык программирования", "Вакансий найдено", "Вакансий обработано", "Средняя зарплата"]]
     rows = []
@@ -142,7 +132,7 @@ def create_vacancies_table(title, vacancies):
         row.append(agg_vacancies.get("vacancies_processed"))
         row.append(agg_vacancies.get("average_salary"))
         rows.append(row)
-    table = AsciiTable(title, columns + rows)
+    table = AsciiTable(columns + rows, title)
     return table.table
 
 
