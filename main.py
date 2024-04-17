@@ -26,6 +26,7 @@ LANGUAGES = {
 
 def get_hh_vacancies(vacancy, language, area, period):
     vacancies = []
+    vacancies_number = None
     payload = {
         "text": f"{vacancy} {language}",
         "search_field": "name",
@@ -41,12 +42,14 @@ def get_hh_vacancies(vacancy, language, area, period):
         response = response.json()
         vacancies += response.get("items", [])
         pages_number = response.get("pages")
+        vacancies_number = response.get("found")
         payload["page"] += 1
-    return vacancies
+    return vacancies, vacancies_number
 
 
 def get_sj_vacancies(catalogues, language, town, period):
     vacancies = []
+    vacancies_number = None
     headers = {"X-Api-App-Id": os.environ["SJ_SECRET_KEY"]}
     payload = {
         "catalogues": catalogues,
@@ -62,16 +65,16 @@ def get_sj_vacancies(catalogues, language, town, period):
         response.raise_for_status()
         response = response.json()
         vacancies += response.get("objects", [])
+        vacancies_number = response.get("total")
         more = response.get("more")
         payload["page"] += 1
-    return vacancies
+    return vacancies, vacancies_number
 
 
 def aggregate_hh_vacancies(languages):
     vacancies_by_language = {}
     for lang in LANGUAGES:
-        vacancies = get_hh_vacancies(HH_VACANCY, lang, CITIES["hh"]["Москва"], VACANCY_PERIOD)
-        vacancies_found = len(vacancies)
+        vacancies, vacancies_found = get_hh_vacancies(HH_VACANCY, lang, CITIES["hh"]["Москва"], VACANCY_PERIOD)
         valid_salary = [predict_rub_salary_hh(v) for v in vacancies if predict_rub_salary_hh(v)]
         if vacancies_found > 100:
             vacancies_by_language[lang] = {}
@@ -84,9 +87,11 @@ def aggregate_hh_vacancies(languages):
 def aggregate_sj_vacancies(languages):
     vacancies_by_language = {}
     for lang in LANGUAGES:
-        vacancies = get_sj_vacancies(SJ_CATALOGUES["Разработка, программирование"], lang, CITIES["sj"]["Москва"],
-                                     VACANCY_PERIOD)
-        vacancies_found = len(vacancies)
+        vacancies, vacancies_found = get_sj_vacancies(
+            SJ_CATALOGUES["Разработка, программирование"],
+            lang, CITIES["sj"]["Москва"],
+            VACANCY_PERIOD
+        )
         valid_salary = [predict_rub_salary_sj(v) for v in vacancies if predict_rub_salary_sj(v)]
         if vacancies_found:
             vacancies_by_language[lang] = {}
