@@ -48,10 +48,10 @@ def get_hh_vacancies(vacancy, language, area, period):
     return vacancies, vacancies_number
 
 
-def get_sj_vacancies(catalogues, language, town, period):
+def get_sj_vacancies(secret_key, catalogues, language, town, period):
     vacancies = []
     vacancies_number = None
-    headers = {"X-Api-App-Id": os.environ["SJ_SECRET_KEY"]}
+    headers = {"X-Api-App-Id": secret_key}
     payload = {
         "catalogues": catalogues,
         "keyword": language,
@@ -90,10 +90,11 @@ def aggregate_hh_vacancies(languages):
     return vacancies_by_language
 
 
-def aggregate_sj_vacancies(languages):
+def aggregate_sj_vacancies(secret_key, languages):
     vacancies_by_language = {}
     for lang in LANGUAGES:
         vacancies, vacancies_found = get_sj_vacancies(
+            secret_key,
             SJ_CATALOGUES["Разработка, программирование"],
             lang, CITIES["sj"]["Москва"],
             VACANCY_PERIOD
@@ -150,8 +151,9 @@ def create_vacancies_table(vacancies, title):
 
 def main():
     load_dotenv()
+    sj_secret_key = os.environ["SJ_SECRET_KEY"]
     print(create_vacancies_table(aggregate_hh_vacancies(LANGUAGES), "HeadHunter Moscow"))
-    print(create_vacancies_table(aggregate_sj_vacancies(LANGUAGES), "SuperJob Moscow"))
+    print(create_vacancies_table(aggregate_sj_vacancies(sj_secret_key, LANGUAGES), "SuperJob Moscow"))
 
 
 if __name__ == "__main__":
