@@ -131,11 +131,18 @@ def parse_vacancies(vacancies):
     return parsed_vacancies
 
 
-def create_vacancies_table(vacancies, title):
+def create_vacancies_table(title, vacancies):
     title = title
     columns = [["Язык программирования", "Вакансий найдено", "Вакансий обработано", "Средняя зарплата"]]
-    table_data = parse_vacancies(vacancies)
-    table = AsciiTable(columns + table_data, title)
+    rows = []
+    for lang, agg_vacancies in vacancies.items():
+        row = []
+        row.append(lang)
+        row.append(agg_vacancies.get("vacancies_found"))
+        row.append(agg_vacancies.get("vacancies_processed"))
+        row.append(agg_vacancies.get("average_salary"))
+        rows.append(row)
+    table = AsciiTable(title, columns + rows)
     return table.table
 
 
