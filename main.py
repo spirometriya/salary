@@ -120,15 +120,15 @@ def predict_rub_salary_sj(vacancy):
 
 
 def parse_vacancies(vacancies):
-    vacancies_list = []
+    parsed_vacancies = []
     for lang, vacancies_data in vacancies.items():
         vacancy_values = []
         vacancy_values.append(lang)
         vacancy_values.append(vacancies_data.get("vacancies_found"))
         vacancy_values.append(vacancies_data.get("vacancies_processed"))
         vacancy_values.append(vacancies_data.get("average_salary"))
-        vacancies_list.append(vacancy_values)
-    return vacancies_list
+        parsed_vacancies.append(vacancy_values)
+    return parsed_vacancies
 
 
 def create_vacancies_table(vacancies, title):
