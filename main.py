@@ -120,17 +120,13 @@ def predict_salary(salary_from, salary_to):
 
 def predict_rub_salary_hh(vacancy):
     salary = vacancy.get("salary")
-    if salary:
-        if salary.get("currency") != CURRENCIES["hh"]:
-            return
+    if salary and salary.get("currency") == CURRENCIES["hh"]:
         return predict_salary(salary["from"], salary["to"])
 
 
 def predict_rub_salary_sj(vacancy):
     salary = {k: v for k, v in vacancy.items() if k in ("payment_from", "payment_to", "currency")}
-    if salary:
-        if salary.get("currency") != CURRENCIES["sj"]:
-            return
+    if salary and salary.get("currency") == CURRENCIES["sj"]:
         return predict_salary(salary["payment_from"], salary["payment_to"])
 
 
@@ -151,7 +147,7 @@ def create_vacancies_table(vacancies, title):
 
 def main():
     load_dotenv()
-    # print(create_vacancies_table(aggregate_hh_vacancies(LANGUAGES), "HeadHunter Moscow"))
+    print(create_vacancies_table(aggregate_hh_vacancies(LANGUAGES), "HeadHunter Moscow"))
     print(create_vacancies_table(aggregate_sj_vacancies(LANGUAGES), "SuperJob Moscow"))
 
 
