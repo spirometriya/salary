@@ -81,7 +81,7 @@ def aggregate_hh_vacancies(languages):
             salary = predict_rub_salary_hh(vacancy)
             if salary:
                 valid_salaries.append(salary)
-        if vacancies_found > MIN_HH_VACANCIES_NUMBER and valid_salaries:
+        if vacancies_found > MIN_HH_VACANCIES_NUMBER:
             vacancies_by_language[lang] = {
                 "vacancies_found": vacancies_found,
                 "vacancies_processed": len(valid_salaries),
@@ -104,7 +104,7 @@ def aggregate_sj_vacancies(secret_key, languages):
             salary = predict_rub_salary_sj(vacancy)
             if salary:
                 valid_salaries.append(salary)
-        if vacancies_found and valid_salaries:
+        if vacancies_found:
             vacancies_by_language[lang] = {
                 "vacancies_found": vacancies_found,
                 "vacancies_processed": len(valid_salaries),
