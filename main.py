@@ -129,12 +129,8 @@ def predict_rub_salary_hh(vacancy):
 
 
 def predict_rub_salary_sj(vacancy):
-    salary = {
-        salary_key: salary_value
-        for salary_key, salary_value in vacancy.items()
-        if salary_key in ("payment_from", "payment_to", "currency")}
-    if salary and salary.get("currency") == CURRENCIES["sj"]:
-        return predict_salary(salary["payment_from"], salary["payment_to"])
+    if vacancy.get("currency") == CURRENCIES["sj"]:
+        return predict_salary(vacancy["payment_from"], vacancy["payment_to"])
 
 
 def create_vacancies_table(vacancies, title):
