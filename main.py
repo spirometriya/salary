@@ -85,7 +85,7 @@ def aggregate_hh_vacancies(languages):
             vacancies_by_language[lang] = {
                 "vacancies_found": vacancies_found,
                 "vacancies_processed": len(valid_salaries),
-                "average_salary": int(sum(valid_salaries) / len(valid_salaries))
+                "average_salary": int(sum(valid_salaries) / len(valid_salaries)) if valid_salaries else None
             }
     return vacancies_by_language
 
@@ -108,7 +108,7 @@ def aggregate_sj_vacancies(secret_key, languages):
             vacancies_by_language[lang] = {
                 "vacancies_found": vacancies_found,
                 "vacancies_processed": len(valid_salaries),
-                "average_salary": int(sum(valid_salaries) / len(valid_salaries))
+                "average_salary": int(sum(valid_salaries) / len(valid_salaries)) if valid_salaries else None
             }
     return vacancies_by_language
 
